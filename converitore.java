@@ -1,133 +1,99 @@
 package scuola;
 
+
+import java.util.Hashtable;
+
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+
 import javafx.stage.Stage;
 
-public class converitore extends Application{
+import javafx.scene.Scene;
 
-TextField tValore= new TextField();
-TextField tBase= new TextField();
+import javafx.scene.layout.GridPane;
 
-Label lRisultato= new Label();
+import javafx.scene.control.Button;
 
-public void start(Stage finestra) throws Exception {
+import javafx.scene.control.Label;
 
-GridPane griglia= new GridPane();
+import javafx.scene.control.TextField;
 
-griglia.setHgap(10);
-griglia.setVgap(10);
+import javafx.geometry.Insets;
 
-Scene scena = new Scene(griglia, 300, 250);
 
-finestra.setScene(scena);
-finestra.setTitle("Converitore");
-finestra.show();
 
-Label lConversione= new Label("N. da convertire");
-Label lBase= new Label("Base");
-Label lConverito= new Label("N. convertito");
+public class convetitore3 extends Application {
 
-Button pCalcola= new Button("CONVERTI");
 
-griglia.add(lConversione, 0, 0);
-griglia.add(tValore, 0, 1);
-griglia.add(tBase, 0, 3);
-griglia.add(lBase, 0, 2);
-griglia.add(pCalcola, 0, 5);
-griglia.add(lConverito, 0, 6);
-griglia.add(lRisultato, 0, 7, 2, 1);
 
-pCalcola.setOnAction(e -> Calcola());
-}
+TextField tNum = new TextField();
+TextField tBaseIn = new TextField();
+TextField tBaseOut = new TextField();
+Label lRis = new Label("result");
 
-private void Calcola() {
+public void start(Stage stage) {
 
-int valore= Integer.parseInt(tValore.getText());
-int base= Integer.parseInt(tBase.getText());
+GridPane grid = new GridPane();
 
-int Resto=0;
+grid.setHgap(10);
+grid.setVgap(10);
+grid.setPadding(new Insets(10));
 
-String s= "";
+Button pConverti = new Button("convertire");
+pConverti.setOnAction(e -> converti());
+grid.add(new Label("numero"), 0, 0);
+grid.add(tNum, 0, 1);
+grid.add(new Label("da base "), 0, 2);
+grid.add(tBaseIn, 0, 3);
+grid.add(new Label("a base"), 0, 4);
+grid.add(tBaseOut, 0, 5);
+grid.add(lRis, 0, 6);
+grid.add(pConverti, 0, 7);
 
-if(base == 16) {
-
-while(valore > 0) {
-
-Resto= valore;
-
-valore= valore / base;
-
-Resto= Resto-(valore*base);
-
-if( Resto < 10 ) {
-
-s= Resto+s;
+Scene scene = new Scene(grid);
+stage.setScene(scene);
+stage.setTitle("Convertitore");
+stage.show();
 
 }
 
-if(Resto == 10) {
+public void converti() {
 
-s="A"+s;
-
+String num = tNum.getText();
+int baseIn = Integer.parseInt(tBaseIn.getText());
+int baseOut = Integer.parseInt(tBaseOut.getText());
+Hashtable<Character, Integer> ht = new Hashtable<>();
+for (int i = 0; i < 10; i++) {
+ht.put((char) ('0' + i), i);
 }
-if(Resto == 11) {
-
-s="B"+s;
-
+for (int i = 10; i < 16; i++) {
+ht.put((char) ('A' + i - 10), i);
 }
-if(Resto == 12) {
-
-s="C"+s;
-
-}
-if(Resto == 13) {
-
-s="D"+s;
-
-}
-if(Resto == 14) {
-
-s="E"+s;
-
-}
-if(Resto == 15) {
-
-s="F"+s;
+int numeroDecimale = 0;
+for (int i = 0; i < num.length(); i++) {
+char cifra = num.charAt(i);
+int valoreCifra = ht.get(cifra);
+numeroDecimale = numeroDecimale * baseIn + valoreCifra;
 
 }
 
+StringBuilder risultato = new StringBuilder();
+
+while (numeroDecimale > 0) {
+int resto = numeroDecimale % baseOut;
+char cifra = (resto < 10) ? (char) ('0' + resto) : (char) ('A' + resto - 10);
+risultato.insert(0, cifra);
+numeroDecimale /= baseOut;
 }
 
-}else {
+lRis.setText(risultato.toString());
 
-while(valore > 0) {
-
-Resto= valore;
-
-valore= valore / base;
-
-Resto= Resto-(valore*base);
-
-s= Resto+s;
-
-}
-
-}
-
-
-
-
-
-lRisultato.setText(s);
 }
 
 public static void main(String[] args) {
+
 launch(args);
+
 }
+
 }
 
